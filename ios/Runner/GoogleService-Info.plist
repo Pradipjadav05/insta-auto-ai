@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC-4voEM9_IjhPfzDnl5lo8owWNW_btH2c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>519869384129</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.instaautoai.instaAutoAi</string>
+	<key>PROJECT_ID</key>
+	<string>insta-auto-ai</string>
+	<key>STORAGE_BUCKET</key>
+	<string>insta-auto-ai.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:519869384129:ios:e587ed7b50e1318a029b40</string>
+</dict>
+</plist>
