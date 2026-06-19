@@ -217,7 +217,6 @@ class _SchedulerScreenState extends ConsumerState<SchedulerScreen> {
               // Title and details
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -242,66 +241,77 @@ class _SchedulerScreenState extends ConsumerState<SchedulerScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      item.title.isNotEmpty ? item.title : 'Untitled Content',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      item.caption,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title.isNotEmpty ? item.title : 'Untitled Content',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                item.caption,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+
+                        // Operations Panel
+                        Column(
+                          children: [
+                            if (item.status == ContentStatus.scheduled)
+                              Text(
+                                DateFormat('MMM d, h:mm a').format(schedule.scheduledTime),
+                                style: const TextStyle(fontSize: 12, color: AppTheme.neonPurple, fontWeight: FontWeight.bold),
+                              ),
+                            if (item.status == ContentStatus.published)
+                              const Text(
+                                'Published',
+                                style: TextStyle(fontSize: 12, color: AppTheme.neonGreen, fontWeight: FontWeight.bold),
+                              ),
+                            if (item.status == ContentStatus.failed)
+                              const Text(
+                                'Publish Failed',
+                                style: TextStyle(fontSize: 12, color: AppTheme.neonPink, fontWeight: FontWeight.bold),
+                              ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                // Trigger publish now
+                                if (item.status == ContentStatus.scheduled || item.status == ContentStatus.draft)
+                                  IconButton(
+                                    icon: const Icon(Icons.send_sharp, color: AppTheme.neonCyan, size: 18),
+                                    tooltip: 'Publish Now',
+                                    onPressed: () => _triggerManualPublish(context, ref, item.id),
+                                  ),
+                                // Trigger retry
+                                if (item.status == ContentStatus.failed)
+                                  IconButton(
+                                    icon: const Icon(Icons.refresh, color: AppTheme.neonCyan, size: 18),
+                                    tooltip: 'Retry Publish',
+                                    onPressed: () => ref.read(schedulerRepositoryProvider).retryFailedSchedule(schedule.id),
+                                  ),
+                                // Trigger delete
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: AppTheme.neonPink, size: 18),
+                                  tooltip: 'Delete Post',
+                                  onPressed: () => _confirmDelete(context, ref, item.id, schedule.id),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(width: 20),
-
-              // Operations Panel
-              Column(
-                children: [
-                  if (item.status == ContentStatus.scheduled)
-                    Text(
-                      DateFormat('MMM d, h:mm a').format(schedule.scheduledTime),
-                      style: const TextStyle(fontSize: 12, color: AppTheme.neonPurple, fontWeight: FontWeight.bold),
-                    ),
-                  if (item.status == ContentStatus.published)
-                    const Text(
-                      'Published',
-                      style: TextStyle(fontSize: 12, color: AppTheme.neonGreen, fontWeight: FontWeight.bold),
-                    ),
-                  if (item.status == ContentStatus.failed)
-                    const Text(
-                      'Publish Failed',
-                      style: TextStyle(fontSize: 12, color: AppTheme.neonPink, fontWeight: FontWeight.bold),
-                    ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      // Trigger publish now
-                      if (item.status == ContentStatus.scheduled || item.status == ContentStatus.draft)
-                        IconButton(
-                          icon: const Icon(Icons.send_sharp, color: AppTheme.neonCyan, size: 18),
-                          tooltip: 'Publish Now',
-                          onPressed: () => _triggerManualPublish(context, ref, item.id),
-                        ),
-                      // Trigger retry
-                      if (item.status == ContentStatus.failed)
-                        IconButton(
-                          icon: const Icon(Icons.refresh, color: AppTheme.neonCyan, size: 18),
-                          tooltip: 'Retry Publish',
-                          onPressed: () => ref.read(schedulerRepositoryProvider).retryFailedSchedule(schedule.id),
-                        ),
-                      // Trigger delete
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline, color: AppTheme.neonPink, size: 18),
-                        tooltip: 'Delete Post',
-                        onPressed: () => _confirmDelete(context, ref, item.id, schedule.id),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ],
           ),

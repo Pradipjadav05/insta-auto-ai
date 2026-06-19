@@ -490,65 +490,169 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   // Opens schedule detail card dialog
+
   void _showScheduleDetailDialog(BuildContext context, ContentItem item, ScheduleItem schedule) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: const Color(0xFF101018),
           surfaceTintColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: AppTheme.panelBorder),
+            side: const BorderSide(
+              color: AppTheme.panelBorder,
+            ),
           ),
-          title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (item.mediaUrls.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    item.mediaUrls[0],
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+
+          title: Text(
+            item.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Content Image
+                  if (item.mediaUrls.isNotEmpty)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        item.mediaUrls.first,
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (
+                            context,
+                            error,
+                            stackTrace,
+                            ) {
+                          return Container(
+                            height: 180,
+                            alignment: Alignment.center,
+                            color: Colors.grey.shade900,
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.white54,
+                              size: 40,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                  const SizedBox(height: 16),
+
+                  /// Format
+                  Text(
+                    'Format: ${item.mediaType.displayName}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.neonCyan,
+                    ),
                   ),
-                ),
-              const SizedBox(height: 16),
-              Text('Format: ${item.mediaType.displayName}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.neonCyan)),
-              const SizedBox(height: 8),
-              Text(item.caption, maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, color: AppTheme.textPrimary)),
-              const SizedBox(height: 8),
-              Text(item.hashtags.join(' '), style: const TextStyle(fontSize: 12, color: AppTheme.neonPurple)),
-              const Divider(height: 24),
-              Text(
-                'Schedule Status: ${schedule.status.name.toUpperCase()}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: schedule.status == ContentStatus.published
-                      ? AppTheme.neonGreen
-                      : schedule.status == ContentStatus.failed
+
+                  const SizedBox(height: 8),
+
+                  /// Caption
+                  Text(
+                    item.caption,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  /// Hashtags
+                  if (item.hashtags.isNotEmpty)
+                    Text(
+                      item.hashtags.join(' '),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.neonPurple,
+                      ),
+                    ),
+
+                  const Divider(height: 24),
+
+                  /// Status
+                  Text(
+                    'Schedule Status: ${schedule.status.name.toUpperCase()}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: schedule.status == ContentStatus.published
+                          ? AppTheme.neonGreen
+                          : schedule.status == ContentStatus.failed
                           ? AppTheme.neonPink
                           : AppTheme.neonPurple,
-                ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  /// Schedule Time
+                  Text(
+                    'Scheduled Time: ${DateFormat('MMMM d, yyyy • h:mm a').format(schedule.scheduledTime)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ],
               ),
-              Text('Scheduled Time: ${DateFormat('MMMM d, h:mm a').format(schedule.scheduledTime)}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-            ],
+            ),
           ),
+
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
               child: const Text('Close'),
             ),
+
             if (schedule.status != ContentStatus.published)
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  ref.read(schedulerRepositoryProvider).publishNow(item.id);
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.neonCyan,
+                  foregroundColor: Colors.black,
+                ),
+                onPressed: () async {
+                  Navigator.of(dialogContext).pop();
+
+                  try {
+                    await ref
+                        .read(schedulerRepositoryProvider)
+                        .publishNow(item.id);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Publishing content...'),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Failed to publish: $e',
+                          ),
+                        ),
+                      );
+                    }
+                  }
                 },
-                style: ElevatedButton.styleFrom(backgroundColor: AppTheme.neonCyan, foregroundColor: Colors.black),
                 child: const Text('Publish Now'),
               ),
           ],
