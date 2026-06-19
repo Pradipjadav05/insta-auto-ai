@@ -51,63 +51,67 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header panel
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Content Calendar',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -0.5,
-                          ),
+                    Expanded(
+                      child: Text(
+                        'Content Calendar',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                            ),
+                      ),
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Monitor schedule plans, dates, and live publishing times.',
-                      style: TextStyle(color: AppTheme.textSecondary),
+                    // const SizedBox(height: 4),
+                    // Month/Week/Day tabs selector
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF101018),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppTheme.panelBorder),
+                        ),
+                        child: Row(
+                          children: ['month', 'week', 'day'].map((v) {
+                            final active = _currentView == v;
+                            return InkWell(
+                              onTap: () => setState(() => _currentView = v),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: active ? AppTheme.neonPurple.withOpacity(0.15) : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  v.toUpperCase(),
+                                  style: TextStyle(
+                                    color: active ? AppTheme.textPrimary : AppTheme.textSecondary,
+                                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                // Month/Week/Day tabs selector
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF101018),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.panelBorder),
-                  ),
-                  child: Row(
-                    children: ['month', 'week', 'day'].map((v) {
-                      final active = _currentView == v;
-                      return InkWell(
-                        onTap: () => setState(() => _currentView = v),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: active ? AppTheme.neonPurple.withOpacity(0.15) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            v.toUpperCase(),
-                            style: TextStyle(
-                              color: active ? AppTheme.textPrimary : AppTheme.textSecondary,
-                              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                const Text(
+                  'Monitor schedule plans, dates, and live publishing times.',
+                  style: TextStyle(color: AppTheme.textSecondary),
                 ),
               ],
             ),
@@ -121,12 +125,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   icon: const Icon(Icons.chevron_left),
                   style: IconButton.styleFrom(backgroundColor: const Color(0xFF101018)),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 4),
                 Text(
                   _getTitleText(),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                const SizedBox(width: 16),
                 IconButton(
                   onPressed: _nextPeriod,
                   icon: const Icon(Icons.chevron_right),
@@ -138,6 +141,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   icon: const Icon(Icons.today_outlined, size: 16),
                   label: const Text('Today'),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                     backgroundColor: const Color(0xFF101018),
                     foregroundColor: AppTheme.textPrimary,
                     side: const BorderSide(color: AppTheme.panelBorder),
@@ -191,12 +195,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   Widget _buildMonthGrid(List<ContentItem> contents, List<ScheduleItem> schedules) {
     final year = _focusedDate.year;
     final month = _focusedDate.month;
-    
+
     // First day of month & number of days
     final firstDayOfMonth = DateTime(year, month, 1);
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final startWeekday = firstDayOfMonth.weekday; // 1 = Monday, 7 = Sunday
-    
+
     // Total cells to display: prepend spaces for weekday alignment
     final totalCells = startWeekday - 1 + daysInMonth;
     final rowsCount = (totalCells / 7).ceil();
@@ -219,7 +223,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           }).toList(),
         ),
         const Divider(),
-        
+
         // Days Grid
         Expanded(
           child: GridView.builder(
@@ -260,6 +264,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 color: isToday ? AppTheme.neonCyan.withOpacity(0.04) : Colors.white.withOpacity(0.02),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
                       cellDayIndex.toString(),
@@ -367,7 +372,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     itemBuilder: (context, idx) {
                       final sched = daySchedules[idx];
                       final item = contents.firstWhere((c) => c.id == sched.contentId);
-                      
+
                       Color accentColor = AppTheme.neonPurple;
                       if (sched.status == ContentStatus.published) {
                         accentColor = AppTheme.neonGreen;

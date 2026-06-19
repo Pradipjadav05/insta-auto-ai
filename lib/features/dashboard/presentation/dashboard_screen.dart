@@ -26,35 +26,37 @@ class DashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Dashboard Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      'Admin Console',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -0.5,
-                          ),
+                    Expanded(
+                      child: Text(
+                        'Admin Console',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                            ),
+                      ),
                     ),
-                    const SizedBox(height: 4),
                     Text(
-                      'Welcome back! Here is your automated publishing overview.',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      DateFormat('EEE, MMM d, yyyy').format(DateTime.now()),
+                      style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  'Welcome back! Here is your automated publishing overview.',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
+
             const SizedBox(height: 36),
 
             // Statistics Grid (Reactive Counters)
