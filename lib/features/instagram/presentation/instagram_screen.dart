@@ -301,7 +301,7 @@ class _InstagramScreenState extends ConsumerState<InstagramScreen> {
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 12),
-          _buildDetailRow('Facebook Page ID', account.pageId),
+          _buildDetailRow('Instagram Page ID', account.pageId),
           _buildDetailRow('Instagram Account ID', account.instagramBusinessAccountId),
           _buildDetailRow('Page Access Token', '••••••••••••••••••••••••'),
           const SizedBox(height: 24),
@@ -344,7 +344,7 @@ class _InstagramScreenState extends ConsumerState<InstagramScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Input Facebook Developer App Instagram credentials below to authorize automated publishing workflows.',
+              'Input Instagram Graph API credentials below to authorize automated publishing workflows.',
               style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 20),
@@ -362,8 +362,8 @@ class _InstagramScreenState extends ConsumerState<InstagramScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _pageIdController,
-              decoration: const InputDecoration(labelText: 'Facebook Page ID'),
-              validator: (v) => v!.isEmpty ? 'Facebook Page ID required' : null,
+              decoration: const InputDecoration(labelText: 'Instagram Page ID'),
+              validator: (v) => v!.isEmpty ? 'Instagram Page ID required' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(

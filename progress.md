@@ -87,3 +87,11 @@
   * [main.dart](file:///Users/rksmiracle/Desktop/PJ/Flutter_Project/insta_auto_ai/lib/main.dart)
   * [progress.md](file:///Users/rksmiracle/Desktop/PJ/Flutter_Project/insta_auto_ai/progress.md)
 * **Next Task**: Run the project locally using `flutter run -d chrome`.
+
+### Bug Fixes & UX Enhancements (June 2026)
+* **Calendar Month Grid RenderFlex Overflow**:
+  * Resolved `RenderFlex` vertical overflow inside month grid cells in [calendar_screen.dart](file:///Users/rksmiracle/Desktop/PJ/Flutter_Project/insta_auto_ai/lib/features/calendar/presentation/calendar_screen.dart) by adjusting the `childAspectRatio` of the Days Grid to `0.7` (increasing cell height relative to width).
+  * Removed layout constraints on cell items so they gracefully scroll vertically if overflowed, avoiding exceptions.
+* **Instagram-Only UI Branding Focus**:
+  * Cleaned up UI references in [instagram_screen.dart](file:///Users/rksmiracle/Desktop/PJ/Flutter_Project/insta_auto_ai/lib/features/instagram/presentation/instagram_screen.dart) to show "Instagram Page ID" and "Instagram Graph API" rather than Facebook terms.
+  * Preserved the underlying Meta Facebook API URL endpoints for publication functionality.
