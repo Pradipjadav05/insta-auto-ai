@@ -230,7 +230,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             itemCount: rowsCount * 7,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
-              childAspectRatio: 1.1,
+              mainAxisExtent: 120, // increase as needed
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
             ),

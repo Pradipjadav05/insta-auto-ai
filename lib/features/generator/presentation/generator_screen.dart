@@ -265,7 +265,7 @@ class _GeneratorScreenState extends ConsumerState<GeneratorScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -317,38 +317,42 @@ class _GeneratorScreenState extends ConsumerState<GeneratorScreen> {
                               // MediaType Choice Row
                               const Text('Format Type', style: TextStyle(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
                               const SizedBox(height: 8),
-                              Row(
-                                children: MediaType.values.map((type) {
-                                  final isSelected = _selectedType == type;
-                                  return Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                      child: InkWell(
-                                        onTap: () => setState(() => _selectedType = type),
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: AnimatedContainer(
-                                          duration: const Duration(milliseconds: 150),
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: isSelected ? AppTheme.neonPurple.withOpacity(0.15) : const Color(0xFF101018),
-                                            border: Border.all(
-                                                color: isSelected ? AppTheme.neonPurple : AppTheme.panelBorder),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            type.displayName,
-                                            style: TextStyle(
-                                              color: isSelected ? AppTheme.textPrimary : AppTheme.textSecondary,
-                                              fontSize: 13,
-                                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: MediaType.values.map((type) {
+                                    final isSelected = _selectedType == type;
+                                    return Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        child: InkWell(
+                                          onTap: () => setState(() => _selectedType = type),
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: AnimatedContainer(
+                                            duration: const Duration(milliseconds: 150),
+                                            padding: const EdgeInsets.symmetric(vertical: 12),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: isSelected ? AppTheme.neonPurple.withOpacity(0.15) : const Color(0xFF101018),
+                                              border: Border.all(
+                                                  color: isSelected ? AppTheme.neonPurple : AppTheme.panelBorder),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              type.displayName,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: isSelected ? AppTheme.textPrimary : AppTheme.textSecondary,
+                                                fontSize: 13,
+                                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ),

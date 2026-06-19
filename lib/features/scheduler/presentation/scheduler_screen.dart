@@ -26,7 +26,7 @@ class _SchedulerScreenState extends ConsumerState<SchedulerScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,59 +46,66 @@ class _SchedulerScreenState extends ConsumerState<SchedulerScreen> {
             const SizedBox(height: 28),
 
             // Controls: Tabs & Search
-            Row(
-              children: [
-                // Tabs
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF101018),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.panelBorder),
-                  ),
-                  child: Row(
-                    children: ['all', 'draft', 'scheduled', 'published', 'failed'].map((tab) {
-                      final active = _activeTab == tab;
-                      return InkWell(
-                        onTap: () => setState(() => _activeTab = tab),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: active ? AppTheme.neonPurple.withOpacity(0.15) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            tab.toUpperCase(),
-                            style: TextStyle(
-                              color: active ? AppTheme.textPrimary : AppTheme.textSecondary,
-                              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                              fontSize: 11,
-                            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF101018),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppTheme.panelBorder),
+                ),
+                child: Row(
+                  children: ['all', 'draft', 'scheduled', 'published', 'failed']
+                      .map((tab) {
+                    final active = _activeTab == tab;
+
+                    return InkWell(
+                      onTap: () => setState(() => _activeTab = tab),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: active
+                              ? AppTheme.neonPurple.withOpacity(0.15)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          tab.toUpperCase(),
+                          style: TextStyle(
+                            color: active
+                                ? AppTheme.textPrimary
+                                : AppTheme.textSecondary,
+                            fontWeight:
+                            active ? FontWeight.bold : FontWeight.normal,
+                            fontSize: 11,
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                const SizedBox(width: 24),
-                // Search Box
-                Expanded(
-                  child: TextField(
-                    onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
-                    decoration: InputDecoration(
-                      hintText: 'Search queue by title...',
-                      prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      fillColor: const Color(0xFF101018),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppTheme.panelBorder),
                       ),
-                    ),
-                  ),
+                    );
+                  }).toList(),
                 ),
-              ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Search Box
+            TextField(
+              onChanged: (v) => setState(() => _searchQuery = v.trim().toLowerCase()),
+              decoration: InputDecoration(
+                hintText: 'Search queue by title...',
+                prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                fillColor: const Color(0xFF101018),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: AppTheme.panelBorder),
+                ),
+              ),
             ),
             const SizedBox(height: 24),
 
